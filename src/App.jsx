@@ -1594,6 +1594,14 @@ function TopBar({ db, setDb, me, nav, setNav, dark, toggleDark, onMenu }) {
 /* ─────────────────────────────────────────────────────────────
    ROOT APP
 ───────────────────────────────────────────────────────────── */
+const SEED = {
+  users: [],
+  posts: [],
+  jobs: [],
+  events: [],
+  notifications: [],
+  messages: []
+};
 export default function App() {
   const [dark, setDark] = useState(true);
   const [screen, setScreen] = useState("landing"); // landing | auth | app
