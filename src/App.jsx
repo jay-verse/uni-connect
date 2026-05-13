@@ -1,9 +1,4 @@
-
-import React, { useState,useEffect, useRef, useMemo } from "react";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./firebase";
-
-//import { useState,  useMemo } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import {
   Heart, MessageCircle, Bookmark, Share2, Search, Bell, Home, Users,
   Briefcase, Calendar, LogOut, Plus, Edit, Trash2, X, Send, Menu,
@@ -17,7 +12,6 @@ import {
 ───────────────────────────────────────────────────────────── */
 function GS({ dark }) {
   return (
-
     <style>{`
       @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
       *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -104,49 +98,47 @@ function GS({ dark }) {
         .sidebar.open{transform:translateX(0);box-shadow:4px 0 40px rgba(0,0,0,0.5);}
         .mwrap{margin-left:0!important;}
       }
-        
     `}</style>
   );
 }
 
 /* ─────────────────────────────────────────────────────────────
    SEED DATA
-───────────────────────────────────────────────────────────── 
-//const D = 86400000;
-//const SEED = {
-  //users: [
-    //{ id:"u1",name:"Arjun Sharma",email:"arjun@rnsit.ac.in",password:"arjun123",role:"Alumni",dept:"Computer Science",batch:"2020",bio:"Senior SWE at Google Bangalore. Loves open source, AI/ML, and helping RNSIT students crack top tech. Happy to mentor!",skills:["React","Node.js","Python","ML","AWS","TypeScript"],avatar:null,banner:null,linkedin:"https://linkedin.com",achievements:["Google Code Jam Finalist 2023","Hacktoberfest Top Contributor"],certs:["AWS Solutions Architect","Google Cloud Pro"],mentor:true,verified:true,followers:["u2","u3","u4"],following:["u2","u3"],joined:Date.now()-D*90 },
-    //{ id:"u2",name:"Priya Nair",email:"priya@rnsit.ac.in",password:"priya123",role:"Student",dept:"Electronics & Communication",batch:"2024",bio:"Final year ECE student. Exploring IoT, embedded systems, and making things blink. IEEE Student Member 📡",skills:["Arduino","Python","VLSI","IoT","Embedded C"],avatar:null,banner:null,linkedin:"",achievements:["IEEE Paper Published 2024"],certs:["NPTEL Python","Coursera IoT Specialization"],mentor:false,verified:true,followers:["u1","u4"],following:["u1","u3","u4"],joined:Date.now()-D*60 },
-    //{ id/:"u3",name:"Dr. Meera Iyer",email:"meera@rnsit.ac.in",password:"meera123",role:"Faculty",dept:"Computer Science",batch:"2005",bio:"Associate Prof, CS Dept. PhD IIT Bombay. Research: Deep Learning, NLP, Explainable AI. Open for project collaborations.",skills:["Deep Learning","NLP","TensorFlow","Research","Python","Computer Vision"],avatar:null,banner:null,linkedin:"",achievements:["Best Paper IEEE 2023","SERB Research Grant 2022","PhD IIT Bombay"],certs:["Stanford ML Certificate"],mentor:true,verified:true,followers:["u1","u2","u4"],following:[],joined:Date.now()-D*200 },
-    //{ id:"u4",name:"Vikram Reddy",email:"vikram@rnsit.ac.in",password:"vikram123",role:"Alumni",dept:"Mechanical Engineering",batch:"2018",bio:"PM @ Swiggy. Mech Eng → Product Management journey. Forbes 30U30 nominee. Helping RNSIT folks break into Product!",skills:["Product Management","SQL","Data Analysis","Agile","Leadership"],avatar:null,banner:null,linkedin:"",achievements:["Forbes 30U30 Nominee 2024","Built Swiggy Hyperlocal Product"],certs:["PMP","Google PM Certificate"],mentor:true,verified:true,followers:["u1","u2","u3"],following:["u1","u2"],joined:Date.now()-D*120 },
-    //{ id:"ua",name:"RNSIT Official",email:"admin@rnsit.ac.in",password:"admin123",role:"Admin",dept:"Administration",batch:"2000",bio:"Official RNSIT Alumni Network Admin. Campus news, events, and announcements. Est. 1984.",skills:["Administration"],avatar:null,banner:null,linkedin:"",achievements:[],certs:[],mentor:false,verified:true,followers:["u1","u2","u3","u4"],following:[],joined:Date.now()-D*300 },
- // ],
-  //posts: [
-    //{ id:"p1",authorId:"u1",content:"🚀 IT'S OFFICIAL — I joined Google as a Senior Software Engineer!\n\nThe journey from RNSIT's CS labs to Google Bangalore has been 3 incredible years of grind, learning, and growth.\n\nTo every RNSIT student preparing for big tech right now: the path is real. Keep going.\n\n💡 I'm opening MENTORSHIP SLOTS for RNSIT students targeting Google, Amazon, Microsoft, and top startups. DM me or hit the Mentorship section!\n\nThank you RNSIT 🙏 #Google #RNSIT #Alumni #BigTech #Mentorship",image:null,category:"achievement",likes:["u2","u3","u4"],comments:[{id:"c1",userId:"u2",text:"Congratulations Arjun!! You DESERVE this! 🎉🔥",ts:Date.now()-D+3600*1000},{id:"c2",userId:"u3",text:"So proud of you! RNSIT shines through every success story like yours!",ts:Date.now()-D+7200*1000},{id:"c3",userId:"u4",text:"🔥🔥 Absolute legend. The path you paved makes it easier for all of us!",ts:Date.now()-D+9000*1000}],bookmarks:["u2","u4"],ts:Date.now()-D*2 },
-    //{ id:"p2",authorId:"u3",content:"📢 Applications open: AI/ML Summer Workshop Series 2026!\n\n6 sessions covering Deep Learning, NLP with Transformers, Computer Vision with PyTorch, MLOps & Deployment.\n\n✅ All branches welcome — 3rd & 4th year preferred\n📅 Every Saturday, June–July 2026\n📍 CS Block Room 301, RNSIT\n🎯 Limited to 50 students\n\nRegister through the Events section. Early applications prioritized!\n\n#RNSIT #AIWorkshop #MachineLearning #DeepLearning",image:null,category:"event",likes:["u1","u2","u4"],comments:[{id:"c4",userId:"u2",text:"Registered! SO excited for this workshop series! 🙌",ts:Date.now()-D/4}],bookmarks:["u2","u1"],ts:Date.now()-D },
-    //{ id:"p3",authorId:"u1",content:"💼 HIRING: Frontend Developer Intern @ Google India, Bangalore\n\nLooking for talented RNSIT students for a 6-month internship with PPO!\n\n🔹 Role: Frontend Developer Intern\n🏢 Google India — Maps Team\n📍 Koramangala, Bangalore\n💰 Stipend: ₹60,000/month + perks\n⏰ Duration: July 2026 – January 2027\n\nRequirements: React, TypeScript, basic DSA, CGPA ≥ 3.0. RNSIT students get priority!\n\nApply through Jobs section! #Hiring #Google #Internship #Frontend",image:null,category:"job",likes:["u2","u4"],comments:[],bookmarks:["u2"],ts:Date.now()-D*3 },
-    //{ id:"p4",authorId:"u4",content:"💡 From Mechanical Engineering → Product Manager at Swiggy.\n\nHere's what nobody tells you:\n\n1. Your technical background is a SUPERPOWER — don't hide it\n2. Product is 70% communication, 30% everything else\n3. Build things. Ship things. That's the portfolio.\n4. The best PMs studied problems, not business schools\n\nRunning a FREE 'Intro to Product Management' session this Saturday!\n\nOpen to ALL branches. Register in the Events section. See you there 🚀\n\n#ProductManagement #RNSIT #CareerAdvice #PM",image:null,category:"mentorship",likes:["u1","u2","u3"],comments:[{id:"c5",userId:"u2",text:"This is so inspiring! Registered for Saturday's session! 🙏",ts:Date.now()-3600*2000}],bookmarks:["u1","u2"],ts:Date.now()-3600*8000 },
-  //],
- // messages: [
-   // {id:"m1",from:"u2",to:"u1",text:"Hi Arjun! Saw your mentorship offer — I'm targeting product-based companies this placement season. Would you have 30 min this week?",ts:Date.now()-3600*3000,read:false},
-    //{id:"m2",from:"u1",to:"u2",text:"Hi Priya! Absolutely happy to help. Yes, let's connect this weekend — send me your resume when you get a chance!",ts:Date.now()-3600*2000,read:true},
-  //],
-  //notifications: [
-   // {id:"n1",for:"u1",type:"follow",from:"u2",text:"Priya Nair started following you",read:false,ts:Date.now()-3600*5000},
-    //{id:"n2",for:"u1",type:"like",from:"u3",text:"Dr. Meera Iyer liked your post",read:false,ts:Date.now()-3600*3000},
-    //{id:"n3",for:"u2",type:"comment",from:"u1",text:"Arjun Sharma replied to your comment",read:true,ts:Date.now()-3600*8000},
-    //{id:"n4",for:"u2",type:"follow",from:"u4",text:"Vikram Reddy started following you",read:false,ts:Date.now()-3600*1000},
-  //],
-  //jobs: [
-   // {id:"j1",by:"u1",title:"Frontend Developer Intern",company:"Google India",loc:"Bangalore",type:"Internship",desc:"Work on Google Maps frontend infrastructure. 6-month internship with PPO opportunity. You'll be embedded in the core Maps team working with React and TypeScript.",skills:["React","TypeScript","Web Performance","CSS"],salary:"₹60,000/month",deadline:Date.now()+D*20,verified:true,ts:Date.now()-D*3,applicants:["u2"]},
-    //{id:"j2",by:"u4",title:"Product Manager — Hyperlocal",company:"Swiggy",loc:"Bangalore (Hybrid)",type:"Full-time",desc:"Join Swiggy's hyperlocal product team. Drive strategy for last-mile delivery in Tier-2/3 cities. Ideal for engineers wanting to transition into product roles.",skills:["Product Management","Data Analysis","SQL","Stakeholder Management"],salary:"₹18–24 LPA",deadline:Date.now()+D*30,verified:true,ts:Date.now()-D*5,applicants:[]},
-  //],
-  //events: [
-   // {id:"ev1",by:"ua",title:"RNSIT Annual Tech Fest 2026",desc:"The biggest tech event of the year! Hackathons, design sprints, workshop tracks, and guest lectures from Google, Amazon & Flipkart. 3 days of pure engineering and innovation! Open to all students.",date:Date.now()+D*18,venue:"RNSIT Main Auditorium & Campus Grounds",type:"fest",registrations:["u1","u2"],ts:Date.now()-D*2},
-    //{id:"ev2",by:"u4",title:"Intro to Product Management — Free Workshop",desc:"Breaking into PM from engineering: a no-BS practical guide. Portfolio building, case studies, mock interviews. Special focus on RNSIT students with non-traditional backgrounds.",date:Date.now()+D*3,venue:"Online (Zoom — link sent on registration)",type:"workshop",registrations:["u2","u3"],ts:Date.now()-3600*8000},
-  //],
-//};
-*/
+───────────────────────────────────────────────────────────── */
+const D = 86400000;
+const SEED = {
+  users: [
+    { id:"u1",name:"Arjun Sharma",email:"arjun@rnsit.ac.in",password:"arjun123",role:"Alumni",dept:"Computer Science",batch:"2020",bio:"Senior SWE at Google Bangalore. Loves open source, AI/ML, and helping RNSIT students crack top tech. Happy to mentor!",skills:["React","Node.js","Python","ML","AWS","TypeScript"],avatar:null,banner:null,linkedin:"https://linkedin.com",achievements:["Google Code Jam Finalist 2023","Hacktoberfest Top Contributor"],certs:["AWS Solutions Architect","Google Cloud Pro"],mentor:true,verified:true,followers:["u2","u3","u4"],following:["u2","u3"],joined:Date.now()-D*90 },
+    { id:"u2",name:"Priya Nair",email:"priya@rnsit.ac.in",password:"priya123",role:"Student",dept:"Electronics & Communication",batch:"2024",bio:"Final year ECE student. Exploring IoT, embedded systems, and making things blink. IEEE Student Member 📡",skills:["Arduino","Python","VLSI","IoT","Embedded C"],avatar:null,banner:null,linkedin:"",achievements:["IEEE Paper Published 2024"],certs:["NPTEL Python","Coursera IoT Specialization"],mentor:false,verified:true,followers:["u1","u4"],following:["u1","u3","u4"],joined:Date.now()-D*60 },
+    { id:"u3",name:"Dr. Meera Iyer",email:"meera@rnsit.ac.in",password:"meera123",role:"Faculty",dept:"Computer Science",batch:"2005",bio:"Associate Prof, CS Dept. PhD IIT Bombay. Research: Deep Learning, NLP, Explainable AI. Open for project collaborations.",skills:["Deep Learning","NLP","TensorFlow","Research","Python","Computer Vision"],avatar:null,banner:null,linkedin:"",achievements:["Best Paper IEEE 2023","SERB Research Grant 2022","PhD IIT Bombay"],certs:["Stanford ML Certificate"],mentor:true,verified:true,followers:["u1","u2","u4"],following:[],joined:Date.now()-D*200 },
+    { id:"u4",name:"Vikram Reddy",email:"vikram@rnsit.ac.in",password:"vikram123",role:"Alumni",dept:"Mechanical Engineering",batch:"2018",bio:"PM @ Swiggy. Mech Eng → Product Management journey. Forbes 30U30 nominee. Helping RNSIT folks break into Product!",skills:["Product Management","SQL","Data Analysis","Agile","Leadership"],avatar:null,banner:null,linkedin:"",achievements:["Forbes 30U30 Nominee 2024","Built Swiggy Hyperlocal Product"],certs:["PMP","Google PM Certificate"],mentor:true,verified:true,followers:["u1","u2","u3"],following:["u1","u2"],joined:Date.now()-D*120 },
+    { id:"ua",name:"RNSIT Official",email:"admin@rnsit.ac.in",password:"admin123",role:"Admin",dept:"Administration",batch:"2000",bio:"Official RNSIT Alumni Network Admin. Campus news, events, and announcements. Est. 1984.",skills:["Administration"],avatar:null,banner:null,linkedin:"",achievements:[],certs:[],mentor:false,verified:true,followers:["u1","u2","u3","u4"],following:[],joined:Date.now()-D*300 },
+  ],
+  posts: [
+    { id:"p1",authorId:"u1",content:"🚀 IT'S OFFICIAL — I joined Google as a Senior Software Engineer!\n\nThe journey from RNSIT's CS labs to Google Bangalore has been 3 incredible years of grind, learning, and growth.\n\nTo every RNSIT student preparing for big tech right now: the path is real. Keep going.\n\n💡 I'm opening MENTORSHIP SLOTS for RNSIT students targeting Google, Amazon, Microsoft, and top startups. DM me or hit the Mentorship section!\n\nThank you RNSIT 🙏 #Google #RNSIT #Alumni #BigTech #Mentorship",image:null,category:"achievement",likes:["u2","u3","u4"],comments:[{id:"c1",userId:"u2",text:"Congratulations Arjun!! You DESERVE this! 🎉🔥",ts:Date.now()-D+3600*1000},{id:"c2",userId:"u3",text:"So proud of you! RNSIT shines through every success story like yours!",ts:Date.now()-D+7200*1000},{id:"c3",userId:"u4",text:"🔥🔥 Absolute legend. The path you paved makes it easier for all of us!",ts:Date.now()-D+9000*1000}],bookmarks:["u2","u4"],ts:Date.now()-D*2 },
+    { id:"p2",authorId:"u3",content:"📢 Applications open: AI/ML Summer Workshop Series 2026!\n\n6 sessions covering Deep Learning, NLP with Transformers, Computer Vision with PyTorch, MLOps & Deployment.\n\n✅ All branches welcome — 3rd & 4th year preferred\n📅 Every Saturday, June–July 2026\n📍 CS Block Room 301, RNSIT\n🎯 Limited to 50 students\n\nRegister through the Events section. Early applications prioritized!\n\n#RNSIT #AIWorkshop #MachineLearning #DeepLearning",image:null,category:"event",likes:["u1","u2","u4"],comments:[{id:"c4",userId:"u2",text:"Registered! SO excited for this workshop series! 🙌",ts:Date.now()-D/4}],bookmarks:["u2","u1"],ts:Date.now()-D },
+    { id:"p3",authorId:"u1",content:"💼 HIRING: Frontend Developer Intern @ Google India, Bangalore\n\nLooking for talented RNSIT students for a 6-month internship with PPO!\n\n🔹 Role: Frontend Developer Intern\n🏢 Google India — Maps Team\n📍 Koramangala, Bangalore\n💰 Stipend: ₹60,000/month + perks\n⏰ Duration: July 2026 – January 2027\n\nRequirements: React, TypeScript, basic DSA, CGPA ≥ 3.0. RNSIT students get priority!\n\nApply through Jobs section! #Hiring #Google #Internship #Frontend",image:null,category:"job",likes:["u2","u4"],comments:[],bookmarks:["u2"],ts:Date.now()-D*3 },
+    { id:"p4",authorId:"u4",content:"💡 From Mechanical Engineering → Product Manager at Swiggy.\n\nHere's what nobody tells you:\n\n1. Your technical background is a SUPERPOWER — don't hide it\n2. Product is 70% communication, 30% everything else\n3. Build things. Ship things. That's the portfolio.\n4. The best PMs studied problems, not business schools\n\nRunning a FREE 'Intro to Product Management' session this Saturday!\n\nOpen to ALL branches. Register in the Events section. See you there 🚀\n\n#ProductManagement #RNSIT #CareerAdvice #PM",image:null,category:"mentorship",likes:["u1","u2","u3"],comments:[{id:"c5",userId:"u2",text:"This is so inspiring! Registered for Saturday's session! 🙏",ts:Date.now()-3600*2000}],bookmarks:["u1","u2"],ts:Date.now()-3600*8000 },
+  ],
+  messages: [
+    {id:"m1",from:"u2",to:"u1",text:"Hi Arjun! Saw your mentorship offer — I'm targeting product-based companies this placement season. Would you have 30 min this week?",ts:Date.now()-3600*3000,read:false},
+    {id:"m2",from:"u1",to:"u2",text:"Hi Priya! Absolutely happy to help. Yes, let's connect this weekend — send me your resume when you get a chance!",ts:Date.now()-3600*2000,read:true},
+  ],
+  notifications: [
+    {id:"n1",for:"u1",type:"follow",from:"u2",text:"Priya Nair started following you",read:false,ts:Date.now()-3600*5000},
+    {id:"n2",for:"u1",type:"like",from:"u3",text:"Dr. Meera Iyer liked your post",read:false,ts:Date.now()-3600*3000},
+    {id:"n3",for:"u2",type:"comment",from:"u1",text:"Arjun Sharma replied to your comment",read:true,ts:Date.now()-3600*8000},
+    {id:"n4",for:"u2",type:"follow",from:"u4",text:"Vikram Reddy started following you",read:false,ts:Date.now()-3600*1000},
+  ],
+  jobs: [
+    {id:"j1",by:"u1",title:"Frontend Developer Intern",company:"Google India",loc:"Bangalore",type:"Internship",desc:"Work on Google Maps frontend infrastructure. 6-month internship with PPO opportunity. You'll be embedded in the core Maps team working with React and TypeScript.",skills:["React","TypeScript","Web Performance","CSS"],salary:"₹60,000/month",deadline:Date.now()+D*20,verified:true,ts:Date.now()-D*3,applicants:["u2"]},
+    {id:"j2",by:"u4",title:"Product Manager — Hyperlocal",company:"Swiggy",loc:"Bangalore (Hybrid)",type:"Full-time",desc:"Join Swiggy's hyperlocal product team. Drive strategy for last-mile delivery in Tier-2/3 cities. Ideal for engineers wanting to transition into product roles.",skills:["Product Management","Data Analysis","SQL","Stakeholder Management"],salary:"₹18–24 LPA",deadline:Date.now()+D*30,verified:true,ts:Date.now()-D*5,applicants:[]},
+  ],
+  events: [
+    {id:"ev1",by:"ua",title:"RNSIT Annual Tech Fest 2026",desc:"The biggest tech event of the year! Hackathons, design sprints, workshop tracks, and guest lectures from Google, Amazon & Flipkart. 3 days of pure engineering and innovation! Open to all students.",date:Date.now()+D*18,venue:"RNSIT Main Auditorium & Campus Grounds",type:"fest",registrations:["u1","u2"],ts:Date.now()-D*2},
+    {id:"ev2",by:"u4",title:"Intro to Product Management — Free Workshop",desc:"Breaking into PM from engineering: a no-BS practical guide. Portfolio building, case studies, mock interviews. Special focus on RNSIT students with non-traditional backgrounds.",date:Date.now()+D*3,venue:"Online (Zoom — link sent on registration)",type:"workshop",registrations:["u2","u3"],ts:Date.now()-3600*8000},
+  ],
+};
 
 /* ─────────────────────────────────────────────────────────────
    UTILITIES
@@ -530,81 +522,30 @@ function AuthPage({ db, setDb, onLogin, tab:initTab }) {
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function login() {
-  setErr("");
-
-  if (!f.email || !f.password) {
-    setErr("Please fill in all fields.");
-    return;
-  }
-
-  try {
+  function login() {
+    setErr("");
+    if (!f.email||!f.password) { setErr("Please fill in all fields."); return; }
+    const user = db.users.find(u=>u.email.toLowerCase()===f.email.toLowerCase()&&u.password===f.password);
+    if (!user) { setErr("Invalid email or password. Try arjun@rnsit.ac.in / arjun123"); return; }
     setLoading(true);
-
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      f.email,
-      f.password
-    );
-
-    const firebaseUser = userCredential.user;
-
-    const user = {
-      id: firebaseUser.uid,
-      name: firebaseUser.email.split("@")[0],
-      email: firebaseUser.email,
-      role: "Student",
-    };
-
-    setLoading(false);
-    onLogin(user);
-
-  } catch (error) {
-    setLoading(false);
-    setErr(error.message);
-  }
-}
-  async function signup() {
-
-  setErr("");
-
-  if (!f.name || !f.email || !f.password) {
-    setErr("All fields are required.");
-    return;
+    setTimeout(()=>{ setLoading(false); onLogin(user); },800);
   }
 
-  try {
-
+  function signup() {
+    setErr("");
+    if (!f.name||!f.email||!f.password) { setErr("All fields are required."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) { setErr("Enter a valid email address."); return; }
+    if (f.password.length < 6) { setErr("Password must be at least 6 characters."); return; }
+    if (!/\d/.test(f.password)) { setErr("Password must contain at least one number."); return; }
+    if (db.users.find(u=>u.email.toLowerCase()===f.email.toLowerCase())) { setErr("An account with this email already exists."); return; }
+    const isAdmin = f.email.toLowerCase()==="admin@rnsit.ac.in";
+    const isVerified = f.email.toLowerCase().endsWith("@rnsit.ac.in");
+    const newUser = { id:uid(), name:f.name.trim(), email:f.email.toLowerCase(), password:f.password, role:isAdmin?"Admin":f.role, dept:"", batch:"", bio:"", skills:[], avatar:null, banner:null, linkedin:"", achievements:[], certs:[], mentor:false, verified:isVerified, followers:[], following:[], joined:Date.now() };
     setLoading(true);
-
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      f.email,
-      f.password
-    );
-
-    const firebaseUser = userCredential.user;
-
-    const newUser = {
-      id: firebaseUser.uid,
-      name: f.name,
-      email: f.email,
-      role: f.role,
-    };
-
-    setLoading(false);
-
-    onLogin(newUser);
-
-  } catch (error) {
-
-    setLoading(false);
-    setErr(error.message);
-
+    setTimeout(()=>{ setDb(p=>({...p,users:[...p.users,newUser]})); setLoading(false); onLogin(newUser); },900);
   }
-}
 
-  //const hints=[["arjun@rnsit.ac.in","arjun123","Alumni"],["priya@rnsit.ac.in","priya123","Student"],["meera@rnsit.ac.in","meera123","Faculty"],["admin@rnsit.ac.in","admin123","Admin"]];
+  const hints=[["arjun@rnsit.ac.in","arjun123","Alumni"],["priya@rnsit.ac.in","priya123","Student"],["meera@rnsit.ac.in","meera123","Faculty"],["admin@rnsit.ac.in","admin123","Admin"]];
 
   return (
     <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",padding:24,background:"var(--bg)",position:"relative",overflow:"hidden"}}>
@@ -1594,14 +1535,6 @@ function TopBar({ db, setDb, me, nav, setNav, dark, toggleDark, onMenu }) {
 /* ─────────────────────────────────────────────────────────────
    ROOT APP
 ───────────────────────────────────────────────────────────── */
-const SEED = {
-  users: [],
-  posts: [],
-  jobs: [],
-  events: [],
-  notifications: [],
-  messages: []
-};
 export default function App() {
   const [dark, setDark] = useState(true);
   const [screen, setScreen] = useState("landing"); // landing | auth | app
@@ -1614,36 +1547,7 @@ export default function App() {
 
   const me = useMemo(()=>user?db.users.find(u=>u.id===user.id)||user:null,[user,db.users]);
 
-
-
-  
-async function login(email, password) {
-
-  try {
-
-    const userCredential =
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-    const user = userCredential.user;
-
-    setUser(user);
-
-    setScreen("app");
-
-    setNav({page:"feed"});
-
-  } catch(err) {
-
-    alert(err.message);
-
-  }
-
-}
-
+  function login(u) { setUser(u); setScreen("app"); setNav({page:"feed"}); }
   function logout() { setUser(null); setScreen("landing"); setNav({page:"feed"}); }
 
   function goProfile(uid) { setNav({page:"profile",id:uid}); setSideOpen(false); }
@@ -1664,7 +1568,6 @@ async function login(email, password) {
   }
 
   return (
-    
     <div className={dark?"":"light"}>
       <GS dark={dark}/>
       {screen==="landing"&&<LandingPage onGetStarted={t=>{setAuthTab(t);setScreen("auth");}}/>}
