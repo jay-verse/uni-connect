@@ -1,5 +1,8 @@
 import { db } from "./firebase";
+import React, { useState, useMemo } from "react";
 
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "./firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { useState, useEffect, useRef, useMemo } from "react";
 import {
@@ -1606,13 +1609,7 @@ export default function App() {
 
 
 
-  import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  onAuthStateChanged
-} from "firebase/auth";
-
-import { auth } from "./firebase";
+  
 async function login(email, password) {
 
   try {
