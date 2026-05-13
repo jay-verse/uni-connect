@@ -537,6 +537,22 @@ function AuthPage({ db, setDb, onLogin, tab:initTab }) {
   }
 
   function signup() {
+    import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "./firebase";
+
+const handleSignup = async () => {
+  try {
+    await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    alert("Account created");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
     setErr("");
     if (!f.name||!f.email||!f.password) { setErr("All fields are required."); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) { setErr("Enter a valid email address."); return; }
@@ -550,7 +566,7 @@ function AuthPage({ db, setDb, onLogin, tab:initTab }) {
     setTimeout(()=>{ setDb(p=>({...p,users:[...p.users,newUser]})); setLoading(false); onLogin(newUser); },900);
   }
 
-  const hints=[["arjun@rnsit.ac.in","arjun123","Alumni"],["priya@rnsit.ac.in","priya123","Student"],["meera@rnsit.ac.in","meera123","Faculty"],["admin@rnsit.ac.in","admin123","Admin"]];
+  //const hints=[["arjun@rnsit.ac.in","arjun123","Alumni"],["priya@rnsit.ac.in","priya123","Student"],["meera@rnsit.ac.in","meera123","Faculty"],["admin@rnsit.ac.in","admin123","Admin"]];
 
   return (
     <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",padding:24,background:"var(--bg)",position:"relative",overflow:"hidden"}}>
