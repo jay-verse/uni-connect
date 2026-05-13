@@ -1,4 +1,5 @@
 import { db } from "./firebase";
+
 import { collection, addDoc } from "firebase/firestore";
 import { useState, useEffect, useRef, useMemo } from "react";
 import {
@@ -527,44 +528,79 @@ function AuthPage({ db, setDb, onLogin, tab:initTab }) {
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
 
-  function login() {
-    setErr("");
-    if (!f.email||!f.password) { setErr("Please fill in all fields."); return; }
-    const user = db.users.find(u=>u.email.toLowerCase()===f.email.toLowerCase()&&u.password===f.password);
-    if (!user) { setErr("Invalid email or password. Try arjun@rnsit.ac.in / arjun123"); return; }
-    setLoading(true);
-    setTimeout(()=>{ setLoading(false); onLogin(user); },800);
+  async function login() {
+  setErr("");
+
+  if (!f.email || !f.password) {
+    setErr("Please fill in all fields.");
+    return;
   }
 
-  function signup() {
-    import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./firebase";
-
-const handleSignup = async () => {
   try {
-    await createUserWithEmailAndPassword(
+    setLoading(true);
+
+    const userCredential = await signInWithEmailAndPassword(
       auth,
-      email,
-      password
+      f.email,
+      f.password
     );
 
-    alert("Account created");
+    const firebaseUser = userCredential.user;
+
+    const user = {
+      id: firebaseUser.uid,
+      name: firebaseUser.email.split("@")[0],
+      email: firebaseUser.email,
+      role: "Student",
+    };
+
+    setLoading(false);
+    onLogin(user);
+
   } catch (error) {
-    console.log(error.message);
+    setLoading(false);
+    setErr(error.message);
   }
-};
-    setErr("");
-    if (!f.name||!f.email||!f.password) { setErr("All fields are required."); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) { setErr("Enter a valid email address."); return; }
-    if (f.password.length < 6) { setErr("Password must be at least 6 characters."); return; }
-    if (!/\d/.test(f.password)) { setErr("Password must contain at least one number."); return; }
-    if (db.users.find(u=>u.email.toLowerCase()===f.email.toLowerCase())) { setErr("An account with this email already exists."); return; }
-    const isAdmin = f.email.toLowerCase()==="admin@rnsit.ac.in";
-    const isVerified = f.email.toLowerCase().endsWith("@rnsit.ac.in");
-    const newUser = { id:uid(), name:f.name.trim(), email:f.email.toLowerCase(), password:f.password, role:isAdmin?"Admin":f.role, dept:"", batch:"", bio:"", skills:[], avatar:null, banner:null, linkedin:"", achievements:[], certs:[], mentor:false, verified:isVerified, followers:[], following:[], joined:Date.now() };
+}
+  async function signup() {
+
+  setErr("");
+
+  if (!f.name || !f.email || !f.password) {
+    setErr("All fields are required.");
+    return;
+  }
+
+  try {
+
     setLoading(true);
-    setTimeout(()=>{ setDb(p=>({...p,users:[...p.users,newUser]})); setLoading(false); onLogin(newUser); },900);
+
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      f.email,
+      f.password
+    );
+
+    const firebaseUser = userCredential.user;
+
+    const newUser = {
+      id: firebaseUser.uid,
+      name: f.name,
+      email: f.email,
+      role: f.role,
+    };
+
+    setLoading(false);
+
+    onLogin(newUser);
+
+  } catch (error) {
+
+    setLoading(false);
+    setErr(error.message);
+
   }
+}
 
   //const hints=[["arjun@rnsit.ac.in","arjun123","Alumni"],["priya@rnsit.ac.in","priya123","Student"],["meera@rnsit.ac.in","meera123","Faculty"],["admin@rnsit.ac.in","admin123","Admin"]];
 
@@ -1568,7 +1604,42 @@ export default function App() {
 
   const me = useMemo(()=>user?db.users.find(u=>u.id===user.id)||user:null,[user,db.users]);
 
-  function login(u) { setUser(u); setScreen("app"); setNav({page:"feed"}); }
+
+
+  import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged
+} from "firebase/auth";
+
+import { auth } from "./firebase";
+async function login(email, password) {
+
+  try {
+
+    const userCredential =
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+    const user = userCredential.user;
+
+    setUser(user);
+
+    setScreen("app");
+
+    setNav({page:"feed"});
+
+  } catch(err) {
+
+    alert(err.message);
+
+  }
+
+}
+
   function logout() { setUser(null); setScreen("landing"); setNav({page:"feed"}); }
 
   function goProfile(uid) { setNav({page:"profile",id:uid}); setSideOpen(false); }
